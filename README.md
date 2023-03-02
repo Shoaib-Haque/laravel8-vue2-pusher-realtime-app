@@ -103,4 +103,12 @@
     <li><strong>install required packages</strong><br>npm install vue-template-compiler vue-loader@^15.9.5 --save-dev --legacy-peer-deps</li>
     <li><strong>update packages</strong><br>npm update</li>
     <li><strong>install vue router, axios</strong><br>npm install vue-router vue-axios --save --legacy-peer-deps</li>
+    <li><a href="https://butlerraines.com/code-stuff/adding-vue-2-laravel-8">Adding Vue 2 to Laravel 8</a></li>
+    <li><strong>look into these files below :</strong></li>
+    <ul>
+        <li>resources\js\app.js</li>
+        <li>resources\js\routes.js</li>
+        <li>resources\views\app.blade.php</li>
+        <li>webpack.mix.js</li>
+    </ul>
 </ol>
