@@ -37,6 +37,38 @@ class UserAuthController extends Controller
     }
 
     /**
+     * Create a User.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function create(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'username' => 'required|string|unique:admins,username|between:2,100',
+            'password' => 'required|string|min:6',
+        ]);
+
+        try {
+            User::create([
+                'email' => $request->email,
+                'username' => $request->username,
+                'password' => bcrypt($request->password)
+            ]);
+
+            return response()->json([
+                'message' => 'User Created Successfully!!'
+            ]);
+        } catch (\Exception $e) {
+            \Log::error($e->getMessage());
+            return response()->json([
+                'message' => 'Something goes wrong while creating a User!!'
+            ], 500);
+        }
+    }
+
+    /**
      * Log the User out (Invalidate the token).
      *
      * @return \Illuminate\Http\JsonResponse
