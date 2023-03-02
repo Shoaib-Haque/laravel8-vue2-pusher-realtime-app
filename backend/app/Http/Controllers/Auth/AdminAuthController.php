@@ -50,7 +50,7 @@ class AdminAuthController extends Controller
         ]);
 
         try {
-            Admins::create([
+            Admin::create([
                 'username' => $request->username,
                 'password' => bcrypt($request->password)
             ]);
