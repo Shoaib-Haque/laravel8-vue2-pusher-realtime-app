@@ -2084,44 +2084,7 @@ __webpack_require__.r(__webpack_exports__);
 var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("main", [_c("nav", {
-    staticClass: "navbar navbar-expand-lg navbar-dark bg-dark"
-  }, [_c("div", {
-    staticClass: "container-fluid"
-  }, [_c("router-link", {
-    staticClass: "navbar-brand",
-    attrs: {
-      to: "/",
-      href: "#"
-    }
-  }, [_vm._v("Laravel VUE CRUD Application - LaravelTuts")]), _vm._v(" "), _c("div", {
-    staticClass: "collapse navbar-collapse",
-    attrs: {
-      id: "navbarSupportedContent"
-    }
-  }, [_c("ul", {
-    staticClass: "navbar-nav mr-auto"
-  }, [_c("li", {
-    staticClass: "nav-item",
-    attrs: {
-      "exact-active-class": "active"
-    }
-  }, [_c("router-link", {
-    staticClass: "nav-link",
-    attrs: {
-      to: "/"
-    }
-  }, [_vm._v("Home")])], 1), _vm._v(" "), _c("li", {
-    staticClass: "nav-item",
-    attrs: {
-      "exact-active-class": ""
-    }
-  }, [_c("router-link", {
-    staticClass: "nav-link",
-    attrs: {
-      to: "/login"
-    }
-  }, [_vm._v("Login")])], 1)])])], 1)]), _vm._v(" "), _c("div", {
+  return _c("main", [_c("div", {
     staticClass: "container mt-5"
   }, [_c("router-view")], 1)]);
 };
@@ -2217,20 +2180,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "routes": () => (/* binding */ routes)
 /* harmony export */ });
-var Welcome = function Welcome() {
-  return __webpack_require__.e(/*! import() */ "resources_js_components_Welcome_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./components/Welcome.vue */ "./resources/js/components/Welcome.vue"));
-};
 var Login = function Login() {
-  return __webpack_require__.e(/*! import() */ "resources_js_components_Login_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./components/Login.vue */ "./resources/js/components/Login.vue"));
+  return __webpack_require__.e(/*! import() */ "resources_js_components_Auth_Login_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./components/Auth/Login.vue */ "./resources/js/components/Auth/Login.vue"));
+};
+var Dashboard = function Dashboard() {
+  return __webpack_require__.e(/*! import() */ "resources_js_components_Dashboard_Index_vue").then(__webpack_require__.bind(__webpack_require__, /*! ./components/Dashboard/Index.vue */ "./resources/js/components/Dashboard/Index.vue"));
 };
 var routes = [{
   name: "home",
   path: "/",
-  component: Welcome
+  component: Login
 }, {
   name: "login",
   path: "/login",
   component: Login
+}, {
+  name: "dashboard",
+  path: "/dashboard",
+  component: Dashboard
 }];
 
 /***/ }),
@@ -35096,7 +35063,7 @@ module.exports = JSON.parse('{"name":"axios","version":"0.21.4","description":"P
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames not based on template
-/******/ 			if ({"resources_js_components_Welcome_vue":1,"resources_js_components_Login_vue":1}[chunkId]) return "js/" + chunkId + ".js";
+/******/ 			if ({"resources_js_components_Auth_Login_vue":1,"resources_js_components_Dashboard_Index_vue":1}[chunkId]) return "js/" + chunkId + ".js";
 /******/ 			// return url for filenames based on template
 /******/ 			return undefined;
 /******/ 		};
