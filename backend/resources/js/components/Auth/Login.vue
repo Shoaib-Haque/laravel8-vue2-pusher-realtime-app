@@ -1,57 +1,68 @@
 <template>
-  <div>
-    <h1>Login</h1>
-    <form @submit.prevent="login">
-      <div>
-        <label>Username:</label>
-        <input type="username" v-model="username" required>
-      </div>
-      <div>
-        <label>Password:</label>
-        <input type="password" v-model="password" required>
-      </div>
-      <button type="submit">Login</button>
-    </form>
-    <p v-if="error">{{ error }}</p>
+  <div class="login-form-container">
+    <a-form ref="form" :model="form" :rules="rules" :label-col="{ span: 6 }" :wrapper-col="{ span: 16 }">
+      <a-form-item label="username" prop="username">
+        <a-input v-model="form.username" placeholder="Username" />
+      </a-form-item>
+      <a-form-item label="Password" prop="password">
+        <a-input v-model="form.password" type="password" placeholder="Password" />
+      </a-form-item>
+      <a-form-item>
+        <a-button type="primary" @click="handleSubmit">Login</a-button>
+      </a-form-item>
+    </a-form>
   </div>
 </template>
 
 <script>
+import { Form, Input, Button, message } from 'ant-design-vue';
 import axios from 'axios';
 
 export default {
+  name: 'LoginForm',
+  components: {
+    AForm: Form,
+    AFormItem: Form.Item,
+    AInput: Input,
+    AButton: Button,
+  },
   data() {
     return {
-      username: '',
-      password: '',
-      error: '',
+      form: {
+        username: '',
+        password: '',
+      },
+      rules: {
+        username: [{ required: true, message: 'Please enter your username address' }, { type: 'username', message: 'Please enter a valid username address' }],
+        password: [{ required: true, message: 'Please enter your password' }],
+      },
     };
   },
   methods: {
-    login() {
-      const admin_auth_data = { username: this.username, password: this.password };
-      axios.post(process.env.MIX_API_URL + 'auth/admin/login', admin_auth_data)
-        .then(response => {
-          const token = response.data.access_token;
-          localStorage.setItem('token', token);
-          console.log(localStorage.getItem('token'));
-          //this.$router.push('/dashboard');
-        })
-        .catch(error => {
-        const user_auth_data = { email: this.username, password: this.password };
-          axios.post(process.env.MIX_API_URL + 'auth/user/login', user_auth_data)
-            .then(response => {
-                const token = response.data.access_token;
-                localStorage.setItem('token', token);
-                console.log(localStorage.getItem('token'));
-                //this.$router.push('/dashboard');
+    handleSubmit() {
+    //   this.$refs.form[0].validate((valid) => {
+    //     if (valid) {
+          axios.post(process.env.MIX_API_URL + 'auth/admin/login', this.form)
+            .then((response) => {
+              //message.success(response.data.message);
+              console.log(response.data);
             })
-            .catch(error => {
-                console.log(error.response);
-                this.error = error.response.data.message;
+            .catch((error) => {
+              //message.error(error.response.data.message);
+              console.log(error.response.data.message);
             });
-        });
+        // } else {
+        //   message.error('Please correct the errors in the form');
+        // }
+      //});
     },
   },
 };
 </script>
+
+<style scoped>
+.login-form-container {
+  width: 400px;
+  margin: 0 auto;
+}
+</style>
