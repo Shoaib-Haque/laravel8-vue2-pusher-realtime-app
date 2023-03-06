@@ -31,7 +31,7 @@ class UserAuthController extends Controller
     public function login(Request $request)
     {
         if (!$token = auth()->attempt($request->post())) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['error' => 'Unauthorized', 'message' => 'Invalid Login'], 401);
         }
         return $this->createNewToken($token);
     }
