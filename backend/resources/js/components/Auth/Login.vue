@@ -7,12 +7,12 @@
             </div>
         </div>
         <div class="ant-card-body">
-            <a-form ref="form" :model="form" :rules="rules" :label-col="{ span: 6 }" :wrapper-col="{ span: 16 }">
+            <a-form ref="form" :rules="rules" :label-col="{ span: 6 }" :wrapper-col="{ span: 16 }">
                 <a-form-item label="Username" prop="username">
-                    <a-input v-model="form.username" placeholder="Username" />
+                    <a-input v-model="username" placeholder="Username" />
                 </a-form-item>
                 <a-form-item label="Password" prop="password" :colon="false">
-                    <a-input v-model="form.password" type="password" placeholder="Password" />
+                    <a-input v-model="password" type="password" placeholder="Password" />
                 </a-form-item>
       <a-form-item>
         <a-button type="primary" @click="handleSubmit">Login</a-button>
@@ -37,10 +37,8 @@ export default {
   },
   data() {
     return {
-      form: {
-        username: '',
-        password: '',
-      },
+      username: '',
+      password: '',
       error: '',
       rules: {
         username: [{ required: true, message: 'Please enter your username address' }, { type: 'username', message: 'Please enter a valid username address' }],
@@ -50,9 +48,9 @@ export default {
   },
   methods: {
     handleSubmit() {
-        if(this.isEmail(this.form.username)) {
-            if(this.validateEmail(this.form.username)) {
-                const user_auth_data = { email: this.form.username, password: this.form.password };
+        if(this.isEmail(this.username)) {
+            if(this.validateEmail(this.username)) {
+                const user_auth_data = { email: this.username, password: this.password };
                 axios.post(process.env.MIX_API_URL + 'auth/user/login', user_auth_data)
                     .then(response => {
                         const token = response.data.access_token;
@@ -68,7 +66,7 @@ export default {
                 console.log("Invalid Login!");
             }
         } else {
-            const admin_auth_data = { username: this.form.username, password: this.form.password };
+            const admin_auth_data = { username: this.username, password: this.password };
             axios.post(process.env.MIX_API_URL + 'auth/admin/login', admin_auth_data)
             .then(response => {
                 const token = response.data.access_token;

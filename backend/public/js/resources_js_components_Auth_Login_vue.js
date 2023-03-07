@@ -28,10 +28,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      form: {
-        username: '',
-        password: ''
-      },
+      username: '',
+      password: '',
       error: '',
       rules: {
         username: [{
@@ -50,11 +48,11 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     handleSubmit: function handleSubmit() {
-      if (this.isEmail(this.form.username)) {
-        if (this.validateEmail(this.form.username)) {
+      if (this.isEmail(this.username)) {
+        if (this.validateEmail(this.username)) {
           var user_auth_data = {
-            email: this.form.username,
-            password: this.form.password
+            email: this.username,
+            password: this.password
           };
           axios__WEBPACK_IMPORTED_MODULE_0___default().post("http://127.0.0.1:8000/api/" + 'auth/user/login', user_auth_data).then(function (response) {
             var token = response.data.access_token;
@@ -70,8 +68,8 @@ __webpack_require__.r(__webpack_exports__);
         }
       } else {
         var admin_auth_data = {
-          username: this.form.username,
-          password: this.form.password
+          username: this.username,
+          password: this.password
         };
         axios__WEBPACK_IMPORTED_MODULE_0___default().post("http://127.0.0.1:8000/api/" + 'auth/admin/login', admin_auth_data).then(function (response) {
           var token = response.data.access_token;
@@ -120,7 +118,6 @@ var render = function render() {
   }, [_c("a-form", {
     ref: "form",
     attrs: {
-      model: _vm.form,
       rules: _vm.rules,
       "label-col": {
         span: 6
@@ -139,11 +136,11 @@ var render = function render() {
       placeholder: "Username"
     },
     model: {
-      value: _vm.form.username,
+      value: _vm.username,
       callback: function callback($$v) {
-        _vm.$set(_vm.form, "username", $$v);
+        _vm.username = $$v;
       },
-      expression: "form.username"
+      expression: "username"
     }
   })], 1), _vm._v(" "), _c("a-form-item", {
     attrs: {
@@ -157,11 +154,11 @@ var render = function render() {
       placeholder: "Password"
     },
     model: {
-      value: _vm.form.password,
+      value: _vm.password,
       callback: function callback($$v) {
-        _vm.$set(_vm.form, "password", $$v);
+        _vm.password = $$v;
       },
-      expression: "form.password"
+      expression: "password"
     }
   })], 1), _vm._v(" "), _c("a-form-item", [_c("a-button", {
     attrs: {
