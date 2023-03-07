@@ -19,7 +19,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: 'LoginForm',
+  name: 'Login',
   components: {
     AForm: ant_design_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
     AFormItem: ant_design_vue__WEBPACK_IMPORTED_MODULE_1__["default"].Item,
@@ -32,6 +32,7 @@ __webpack_require__.r(__webpack_exports__);
         username: '',
         password: ''
       },
+      error: '',
       rules: {
         username: [{
           required: true,
@@ -49,19 +50,44 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     handleSubmit: function handleSubmit() {
-      //   this.$refs.form[0].validate((valid) => {
-      //     if (valid) {
-      axios__WEBPACK_IMPORTED_MODULE_0___default().post("http://127.0.0.1:8000/api/" + 'auth/admin/login', this.form).then(function (response) {
-        //message.success(response.data.message);
-        console.log(response.data);
-      })["catch"](function (error) {
-        //message.error(error.response.data.message);
-        console.log(error.response.data.message);
-      });
-      // } else {
-      //   message.error('Please correct the errors in the form');
-      // }
-      //});
+      if (this.isEmail(this.form.username)) {
+        if (this.validateEmail(this.form.username)) {
+          var user_auth_data = {
+            email: this.form.username,
+            password: this.form.password
+          };
+          axios__WEBPACK_IMPORTED_MODULE_0___default().post("http://127.0.0.1:8000/api/" + 'auth/user/login', user_auth_data).then(function (response) {
+            var token = response.data.access_token;
+            localStorage.setItem('token', token);
+            console.log(localStorage.getItem('token'));
+            //this.$router.push('/dashboard');
+          })["catch"](function (error) {
+            console.log(error.response.data.message);
+            //this.error = error.response.data.message;
+          });
+        } else {
+          console.log("Invalid Login!");
+        }
+      } else {
+        var admin_auth_data = {
+          username: this.form.username,
+          password: this.form.password
+        };
+        axios__WEBPACK_IMPORTED_MODULE_0___default().post("http://127.0.0.1:8000/api/" + 'auth/admin/login', admin_auth_data).then(function (response) {
+          var token = response.data.access_token;
+          localStorage.setItem('token', token);
+          console.log(localStorage.getItem('token'));
+          //this.$router.push('/dashboard');
+        })["catch"](function (error) {
+          console.log(error.response.data.message);
+        });
+      }
+    },
+    validateEmail: function validateEmail(email) {
+      return email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+    },
+    isEmail: function isEmail(email) {
+      return email.indexOf('@') > -1;
     }
   }
 });
@@ -84,6 +110,13 @@ var render = function render() {
     _c = _vm._self._c;
   return _c("div", {
     staticClass: "login-form-container"
+  }, [_c("div", {
+    staticClass: "ant-card ant-card-bordered css-1me4733",
+    staticStyle: {
+      width: "300px"
+    }
+  }, [_vm._m(0), _vm._v(" "), _c("div", {
+    staticClass: "ant-card-body"
   }, [_c("a-form", {
     ref: "form",
     attrs: {
@@ -98,7 +131,7 @@ var render = function render() {
     }
   }, [_c("a-form-item", {
     attrs: {
-      label: "username",
+      label: "Username",
       prop: "username"
     }
   }, [_c("a-input", {
@@ -115,7 +148,8 @@ var render = function render() {
   })], 1), _vm._v(" "), _c("a-form-item", {
     attrs: {
       label: "Password",
-      prop: "password"
+      prop: "password",
+      colon: false
     }
   }, [_c("a-input", {
     attrs: {
@@ -136,9 +170,19 @@ var render = function render() {
     on: {
       click: _vm.handleSubmit
     }
-  }, [_vm._v("Login")])], 1)], 1)], 1);
+  }, [_vm._v("Login")])], 1)], 1)], 1)])]);
 };
-var staticRenderFns = [];
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "ant-card-head"
+  }, [_c("div", {
+    staticClass: "ant-card-head-wrapper"
+  }, [_c("div", {
+    staticClass: "ant-card-head-title"
+  }, [_vm._v("Login")])])]);
+}];
 render._withStripped = true;
 
 
