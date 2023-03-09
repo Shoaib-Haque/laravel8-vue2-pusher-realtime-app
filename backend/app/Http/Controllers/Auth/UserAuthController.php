@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Notifications\Action;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 use Exception;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
@@ -20,7 +20,7 @@ class UserAuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:user', ['except' => ['login']]);
+        $this->middleware('auth:user', ['except' => ['login', 'create']]);
         config(['auth.defaults.guard' => 'user']);
     }
     /**
@@ -44,19 +44,23 @@ class UserAuthController extends Controller
      */
     public function create(Request $request)
     {
+        // Validate input data
         $request->validate([
-            'email' => 'required|email',
-            'username' => 'required|string|unique:admins,username|between:2,100',
-            'password' => 'required|string|min:6',
+            'email' => 'required|email|unique:users,email|max:30',
+            'username' => 'required|string|between:2,30',
+            'password' => 'required|string|between:6,20',
+            'confirm_password' => 'required|same:password',
         ]);
 
         try {
+            // Create new user
             User::create([
                 'email' => $request->email,
-                'username' => $request->username,
+                'user_name' => $request->username,
                 'password' => bcrypt($request->password)
             ]);
 
+            // Return response
             return response()->json([
                 'message' => 'User Created Successfully!!'
             ]);
