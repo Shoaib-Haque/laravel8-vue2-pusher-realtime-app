@@ -11,75 +11,63 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var ant_design_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ant-design-vue */ "./node_modules/ant-design-vue/es/form/index.js");
-/* harmony import */ var ant_design_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ant-design-vue */ "./node_modules/ant-design-vue/es/input/index.js");
-/* harmony import */ var ant_design_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ant-design-vue */ "./node_modules/ant-design-vue/es/button/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 
-
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: 'Login',
-  components: {
-    AForm: ant_design_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
-    AFormItem: ant_design_vue__WEBPACK_IMPORTED_MODULE_1__["default"].Item,
-    AInput: ant_design_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
-    AButton: ant_design_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
+  beforeCreate: function beforeCreate() {
+    this.form = this.$form.createForm(this, {
+      name: 'Login'
+    });
   },
+  created: function created() {
+    document.title = "Login";
+  },
+  name: 'Login',
   data: function data() {
     return {
-      username: '',
-      password: '',
-      error: '',
-      rules: {
-        username: [{
-          required: true,
-          message: 'Please enter your username address'
-        }, {
-          type: 'username',
-          message: 'Please enter a valid username address'
-        }],
-        password: [{
-          required: true,
-          message: 'Please enter your password'
-        }]
-      }
+      error: ''
     };
   },
   methods: {
-    handleSubmit: function handleSubmit() {
-      if (this.isEmail(this.username)) {
-        if (this.validateEmail(this.username)) {
-          var user_auth_data = {
-            email: this.username,
-            password: this.password
-          };
-          axios__WEBPACK_IMPORTED_MODULE_0___default().post("http://127.0.0.1:8000/api/" + 'auth/user/login', user_auth_data).then(function (response) {
-            var token = response.data.access_token;
-            localStorage.setItem('token', token);
-            console.log(localStorage.getItem('token'));
-            //this.$router.push('/dashboard');
-          })["catch"](function (error) {
-            console.log(error.response.data.message);
-            //this.error = error.response.data.message;
-          });
-        } else {
-          console.log("Invalid Login!");
+    handleSubmit: function handleSubmit(e) {
+      var _this = this;
+      e.preventDefault();
+      this.form.validateFields(function (err, values) {
+        if (!err) {
+          _this.error = "";
+          if (_this.isEmail(_this.form.getFieldValue('username'))) {
+            if (_this.validateEmail(_this.form.getFieldValue('username'))) {
+              var user_auth_data = {
+                email: _this.form.getFieldValue('username'),
+                password: _this.form.getFieldValue('password')
+              };
+              axios__WEBPACK_IMPORTED_MODULE_0___default().post("http://127.0.0.1:8000/api/" + 'auth/user/login', user_auth_data).then(function (response) {
+                var token = response.data.access_token;
+                localStorage.setItem('token', token);
+                //console.log(localStorage.getItem('token'));
+                _this.$router.push('/user/dashboard');
+              })["catch"](function (error) {
+                _this.error = error.response.data.message;
+              });
+            } else {
+              _this.error = "Invalid Login!";
+            }
+          } else {
+            var admin_auth_data = {
+              username: _this.form.getFieldValue('username'),
+              password: _this.form.getFieldValue('password')
+            };
+            axios__WEBPACK_IMPORTED_MODULE_0___default().post("http://127.0.0.1:8000/api/" + 'auth/admin/login', admin_auth_data).then(function (response) {
+              var token = response.data.access_token;
+              localStorage.setItem('token', token);
+              _this.$router.push('/admin/dashboard');
+            })["catch"](function (error) {
+              _this.error = error.response.data.message;
+            });
+          }
         }
-      } else {
-        var admin_auth_data = {
-          username: this.username,
-          password: this.password
-        };
-        axios__WEBPACK_IMPORTED_MODULE_0___default().post("http://127.0.0.1:8000/api/" + 'auth/admin/login', admin_auth_data).then(function (response) {
-          var token = response.data.access_token;
-          localStorage.setItem('token', token);
-          console.log(localStorage.getItem('token'));
-          //this.$router.push('/dashboard');
-        })["catch"](function (error) {
-          console.log(error.response.data.message);
-        });
-      }
+      });
     },
     validateEmail: function validateEmail(email) {
       return email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
@@ -92,10 +80,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Auth/Login.vue?vue&type=template&id=06688fcd&scoped=true&":
-/*!****************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Auth/Login.vue?vue&type=template&id=06688fcd&scoped=true& ***!
-  \****************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Auth/Login.vue?vue&type=template&id=06688fcd&":
+/*!****************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Auth/Login.vue?vue&type=template&id=06688fcd& ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -106,89 +94,120 @@ __webpack_require__.r(__webpack_exports__);
 var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "login-form-container"
-  }, [_c("div", {
-    staticClass: "ant-card ant-card-bordered css-1me4733",
-    staticStyle: {
-      width: "300px"
-    }
-  }, [_vm._m(0), _vm._v(" "), _c("div", {
-    staticClass: "ant-card-body"
-  }, [_c("a-form", {
-    ref: "form",
+  return _c("a-row", {
     attrs: {
-      rules: _vm.rules,
-      "label-col": {
-        span: 6
+      type: "flex",
+      justify: "center"
+    }
+  }, [_c("a-col", {
+    attrs: {
+      xs: {
+        span: 20
       },
-      "wrapper-col": {
-        span: 16
+      sm: {
+        span: 18
+      },
+      md: {
+        span: 12
+      },
+      lg: {
+        span: 8
       }
     }
-  }, [_c("a-form-item", {
+  }, [_c("a-card", {
     attrs: {
-      label: "Username",
-      prop: "username"
+      title: "Login"
     }
-  }, [_c("a-input", {
+  }, [_vm.error !== undefined && _vm.error !== "" ? _c("a-alert", {
+    attrs: {
+      message: _vm.error,
+      type: "error"
+    }
+  }) : _vm._e(), _vm._v(" "), _c("a-form", {
+    staticClass: "login-form",
+    attrs: {
+      id: "components-form-demo-normal-login",
+      form: _vm.form
+    },
+    on: {
+      submit: _vm.handleSubmit
+    }
+  }, [_c("a-form-item", [_c("a-input", {
+    directives: [{
+      name: "decorator",
+      rawName: "v-decorator",
+      value: ["username", {
+        rules: [{
+          required: true,
+          message: "Please input your username!"
+        }]
+      }],
+      expression: "[\n                        'username',\n                        { rules: [{ required: true, message: 'Please input your username!' }] },\n                        ]"
+    }],
     attrs: {
       placeholder: "Username"
+    }
+  }, [_c("a-icon", {
+    staticStyle: {
+      color: "rgba(0,0,0,.25)"
     },
-    model: {
-      value: _vm.username,
-      callback: function callback($$v) {
-        _vm.username = $$v;
-      },
-      expression: "username"
-    }
-  })], 1), _vm._v(" "), _c("a-form-item", {
     attrs: {
-      label: "Password",
-      prop: "password",
-      colon: false
-    }
-  }, [_c("a-input", {
+      slot: "prefix",
+      type: "user"
+    },
+    slot: "prefix"
+  })], 1)], 1), _vm._v(" "), _c("a-form-item", [_c("a-input-password", {
+    directives: [{
+      name: "decorator",
+      rawName: "v-decorator",
+      value: ["password", {
+        rules: [{
+          required: true,
+          message: "Please input your Password!"
+        }]
+      }],
+      expression: "[\n                        'password',\n                        { rules: [{ required: true, message: 'Please input your Password!' }] },\n                        ]"
+    }],
     attrs: {
       type: "password",
       placeholder: "Password"
-    },
-    model: {
-      value: _vm.password,
-      callback: function callback($$v) {
-        _vm.password = $$v;
-      },
-      expression: "password"
     }
-  })], 1), _vm._v(" "), _c("a-form-item", [_c("a-button", {
+  }, [_c("a-icon", {
+    staticStyle: {
+      color: "rgba(0,0,0,.25)"
+    },
     attrs: {
-      type: "primary"
+      slot: "prefix",
+      type: "lock"
     },
-    on: {
-      click: _vm.handleSubmit
+    slot: "prefix"
+  })], 1)], 1), _vm._v(" "), _c("a-form-item", [_c("a", {
+    staticClass: "login-form-forgot",
+    attrs: {
+      href: ""
     }
-  }, [_vm._v("Login")])], 1)], 1)], 1)])]);
+  }, [_vm._v("\n                        Forgot password\n                    ")]), _vm._v(" "), _c("a-button", {
+    staticClass: "login-form-button",
+    attrs: {
+      type: "primary",
+      "html-type": "submit"
+    }
+  }, [_vm._v("\n                        Log in\n                    ")]), _vm._v("\n                    Or\n                    "), _c("a", {
+    attrs: {
+      href: "registration"
+    }
+  }, [_vm._v("\n                        register now!\n                    ")])], 1)], 1)], 1)], 1)], 1);
 };
-var staticRenderFns = [function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "ant-card-head"
-  }, [_c("div", {
-    staticClass: "ant-card-head-wrapper"
-  }, [_c("div", {
-    staticClass: "ant-card-head-title"
-  }, [_vm._v("Login")])])]);
-}];
+var staticRenderFns = [];
 render._withStripped = true;
 
 
 /***/ }),
 
-/***/ "./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Auth/Login.vue?vue&type=style&index=0&id=06688fcd&scoped=true&lang=css&":
-/*!**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Auth/Login.vue?vue&type=style&index=0&id=06688fcd&scoped=true&lang=css& ***!
-  \**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Auth/Login.vue?vue&type=style&index=0&id=06688fcd&lang=css&":
+/*!**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Auth/Login.vue?vue&type=style&index=0&id=06688fcd&lang=css& ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -201,17 +220,17 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.login-form-container[data-v-06688fcd] {\n  width: 400px;\n  margin: 0 auto;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n#components-form-demo-normal-login .login-form-forgot {\n  float: right;\n}\n#components-form-demo-normal-login .login-form-button {\n  width: 100%;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
 
 /***/ }),
 
-/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Auth/Login.vue?vue&type=style&index=0&id=06688fcd&scoped=true&lang=css&":
-/*!******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Auth/Login.vue?vue&type=style&index=0&id=06688fcd&scoped=true&lang=css& ***!
-  \******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Auth/Login.vue?vue&type=style&index=0&id=06688fcd&lang=css&":
+/*!******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Auth/Login.vue?vue&type=style&index=0&id=06688fcd&lang=css& ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -220,7 +239,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
 /* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Login_vue_vue_type_style_index_0_id_06688fcd_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../../node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Login.vue?vue&type=style&index=0&id=06688fcd&scoped=true&lang=css& */ "./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Auth/Login.vue?vue&type=style&index=0&id=06688fcd&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Login_vue_vue_type_style_index_0_id_06688fcd_lang_css___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../../node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Login.vue?vue&type=style&index=0&id=06688fcd&lang=css& */ "./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Auth/Login.vue?vue&type=style&index=0&id=06688fcd&lang=css&");
 
             
 
@@ -229,11 +248,11 @@ var options = {};
 options.insert = "head";
 options.singleton = false;
 
-var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Login_vue_vue_type_style_index_0_id_06688fcd_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_1__["default"], options);
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Login_vue_vue_type_style_index_0_id_06688fcd_lang_css___WEBPACK_IMPORTED_MODULE_1__["default"], options);
 
 
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Login_vue_vue_type_style_index_0_id_06688fcd_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Login_vue_vue_type_style_index_0_id_06688fcd_lang_css___WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
 
 /***/ }),
 
@@ -247,9 +266,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _Login_vue_vue_type_template_id_06688fcd_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Login.vue?vue&type=template&id=06688fcd&scoped=true& */ "./resources/js/components/Auth/Login.vue?vue&type=template&id=06688fcd&scoped=true&");
+/* harmony import */ var _Login_vue_vue_type_template_id_06688fcd___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Login.vue?vue&type=template&id=06688fcd& */ "./resources/js/components/Auth/Login.vue?vue&type=template&id=06688fcd&");
 /* harmony import */ var _Login_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Login.vue?vue&type=script&lang=js& */ "./resources/js/components/Auth/Login.vue?vue&type=script&lang=js&");
-/* harmony import */ var _Login_vue_vue_type_style_index_0_id_06688fcd_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Login.vue?vue&type=style&index=0&id=06688fcd&scoped=true&lang=css& */ "./resources/js/components/Auth/Login.vue?vue&type=style&index=0&id=06688fcd&scoped=true&lang=css&");
+/* harmony import */ var _Login_vue_vue_type_style_index_0_id_06688fcd_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Login.vue?vue&type=style&index=0&id=06688fcd&lang=css& */ "./resources/js/components/Auth/Login.vue?vue&type=style&index=0&id=06688fcd&lang=css&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -261,11 +280,11 @@ __webpack_require__.r(__webpack_exports__);
 
 var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
   _Login_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _Login_vue_vue_type_template_id_06688fcd_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render,
-  _Login_vue_vue_type_template_id_06688fcd_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  _Login_vue_vue_type_template_id_06688fcd___WEBPACK_IMPORTED_MODULE_0__.render,
+  _Login_vue_vue_type_template_id_06688fcd___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
   false,
   null,
-  "06688fcd",
+  null,
   null
   
 )
@@ -292,30 +311,30 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/Auth/Login.vue?vue&type=template&id=06688fcd&scoped=true&":
-/*!*******************************************************************************************!*\
-  !*** ./resources/js/components/Auth/Login.vue?vue&type=template&id=06688fcd&scoped=true& ***!
-  \*******************************************************************************************/
+/***/ "./resources/js/components/Auth/Login.vue?vue&type=template&id=06688fcd&":
+/*!*******************************************************************************!*\
+  !*** ./resources/js/components/Auth/Login.vue?vue&type=template&id=06688fcd& ***!
+  \*******************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Login_vue_vue_type_template_id_06688fcd_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render),
-/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Login_vue_vue_type_template_id_06688fcd_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Login_vue_vue_type_template_id_06688fcd___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Login_vue_vue_type_template_id_06688fcd___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Login_vue_vue_type_template_id_06688fcd_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Login.vue?vue&type=template&id=06688fcd&scoped=true& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Auth/Login.vue?vue&type=template&id=06688fcd&scoped=true&");
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Login_vue_vue_type_template_id_06688fcd___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Login.vue?vue&type=template&id=06688fcd& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Auth/Login.vue?vue&type=template&id=06688fcd&");
 
 
 /***/ }),
 
-/***/ "./resources/js/components/Auth/Login.vue?vue&type=style&index=0&id=06688fcd&scoped=true&lang=css&":
-/*!*********************************************************************************************************!*\
-  !*** ./resources/js/components/Auth/Login.vue?vue&type=style&index=0&id=06688fcd&scoped=true&lang=css& ***!
-  \*********************************************************************************************************/
+/***/ "./resources/js/components/Auth/Login.vue?vue&type=style&index=0&id=06688fcd&lang=css&":
+/*!*********************************************************************************************!*\
+  !*** ./resources/js/components/Auth/Login.vue?vue&type=style&index=0&id=06688fcd&lang=css& ***!
+  \*********************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Login_vue_vue_type_style_index_0_id_06688fcd_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader/dist/cjs.js!../../../../node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Login.vue?vue&type=style&index=0&id=06688fcd&scoped=true&lang=css& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Auth/Login.vue?vue&type=style&index=0&id=06688fcd&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Login_vue_vue_type_style_index_0_id_06688fcd_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader/dist/cjs.js!../../../../node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Login.vue?vue&type=style&index=0&id=06688fcd&lang=css& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/Auth/Login.vue?vue&type=style&index=0&id=06688fcd&lang=css&");
 
 
 /***/ })

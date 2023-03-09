@@ -1,83 +1,111 @@
 <template>
-  <div class="login-form-container">
-    <div style="width:300px" class="ant-card ant-card-bordered css-1me4733">
-        <div class="ant-card-head">
-            <div class="ant-card-head-wrapper">
-                <div class="ant-card-head-title">Login</div>
-            </div>
-        </div>
-        <div class="ant-card-body">
-            <a-form ref="form" :rules="rules" :label-col="{ span: 6 }" :wrapper-col="{ span: 16 }">
-                <a-form-item label="Username" prop="username">
-                    <a-input v-model="username" placeholder="Username" />
-                </a-form-item>
-                <a-form-item label="Password" prop="password" :colon="false">
-                    <a-input v-model="password" type="password" placeholder="Password" />
-                </a-form-item>
-      <a-form-item>
-        <a-button type="primary" @click="handleSubmit">Login</a-button>
-      </a-form-item>
-    </a-form>
-  </div>
-    </div>
-  </div>
+    <a-row type="flex" justify="center">
+        <a-col :xs="{ span: 20 }" :sm="{ span: 18 }" :md="{ span: 12 }" :lg="{ span: 8 }">
+            <a-card title="Login">
+                <a-alert
+                    v-if="error !== undefined && error !== ''"
+                    :message="error"
+                    type="error"
+                />
+                <a-form
+                    id="components-form-demo-normal-login"
+                    :form="form"
+                    class="login-form"
+                    @submit="handleSubmit"
+                >
+                    <a-form-item>
+                        <a-input
+                            v-decorator="[
+                            'username',
+                            { rules: [{ required: true, message: 'Please input your username!' }] },
+                            ]"
+                            placeholder="Username"
+                        >
+                            <a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25)" />
+                        </a-input>
+                    </a-form-item>
+                    <a-form-item>
+                        <a-input-password
+                            v-decorator="[
+                            'password',
+                            { rules: [{ required: true, message: 'Please input your Password!' }] },
+                            ]"
+                            type="password"
+                            placeholder="Password"
+                        >
+                            <a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25)" />
+                        </a-input-password>
+                    </a-form-item>
+                    <a-form-item>
+                        <a class="login-form-forgot" href="">
+                            Forgot password
+                        </a>
+                        <a-button type="primary" html-type="submit" class="login-form-button">
+                            Log in
+                        </a-button>
+                        Or
+                        <a href="registration">
+                            register now!
+                        </a>
+                    </a-form-item>
+                </a-form>
+            </a-card>
+        </a-col>
+    </a-row>
 </template>
 
 <script>
-import { Form, Input, Button, message } from 'ant-design-vue';
 import axios from 'axios';
 
 export default {
-  name: 'Login',
-  components: {
-    AForm: Form,
-    AFormItem: Form.Item,
-    AInput: Input,
-    AButton: Button,
+  beforeCreate() {
+    this.form = this.$form.createForm(this, { name: 'Login' });
   },
+  created () {
+    document.title = "Login"
+  },
+  name: 'Login',
   data() {
     return {
-      username: '',
-      password: '',
       error: '',
-      rules: {
-        username: [{ required: true, message: 'Please enter your username address' }, { type: 'username', message: 'Please enter a valid username address' }],
-        password: [{ required: true, message: 'Please enter your password' }],
-      },
     };
   },
   methods: {
-    handleSubmit() {
-        if(this.isEmail(this.username)) {
-            if(this.validateEmail(this.username)) {
-                const user_auth_data = { email: this.username, password: this.password };
-                axios.post(process.env.MIX_API_URL + 'auth/user/login', user_auth_data)
-                    .then(response => {
-                        const token = response.data.access_token;
-                        localStorage.setItem('token', token);
-                        console.log(localStorage.getItem('token'));
-                        //this.$router.push('/dashboard');
-                    })
-                    .catch(error => {
-                        console.log(error.response.data.message);
-                        //this.error = error.response.data.message;
-                    });
+    handleSubmit(e) {
+      e.preventDefault();
+      this.form.validateFields((err, values) => {
+        if (!err) {
+            this.error = "";
+            if(this.isEmail(this.form.getFieldValue('username'))) {
+                if(this.validateEmail(this.form.getFieldValue('username'))) {
+                    const user_auth_data = { email: this.form.getFieldValue('username'), password: this.form.getFieldValue('password') };
+                    axios.post(process.env.MIX_API_URL + 'auth/user/login', user_auth_data)
+                        .then(response => {
+                            const token = response.data.access_token;
+                            localStorage.setItem('token', token);
+                            //console.log(localStorage.getItem('token'));
+                            this.$router.push('/user/dashboard');
+                        })
+                        .catch(error => {
+                            this.error = error.response.data.message;
+                        });
+                } else {
+                    this.error = "Invalid Login!";
+                }
             } else {
-                console.log("Invalid Login!");
+                const admin_auth_data = { username: this.form.getFieldValue('username'), password: this.form.getFieldValue('password') };
+                axios.post(process.env.MIX_API_URL + 'auth/admin/login', admin_auth_data)
+                .then(response => {
+                    const token = response.data.access_token;
+                    localStorage.setItem('token', token);
+                    this.$router.push('/admin/dashboard');
+                })
+                .catch(error => {
+                    this.error = error.response.data.message;
+                });
             }
-        } else {
-            const admin_auth_data = { username: this.username, password: this.password };
-            axios.post(process.env.MIX_API_URL + 'auth/admin/login', admin_auth_data)
-            .then(response => {
-                const token = response.data.access_token;
-                localStorage.setItem('token', token);
-                console.log(localStorage.getItem('token'));
-                //this.$router.push('/dashboard');
-            })
-            .catch(error => {
-                console.log(error.response.data.message);
-            });
         }
+      });
     },
     validateEmail(email) {
         return email.match(
@@ -90,10 +118,11 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.login-form-container {
-  width: 400px;
-  margin: 0 auto;
+<style>
+#components-form-demo-normal-login .login-form-forgot {
+  float: right;
+}
+#components-form-demo-normal-login .login-form-button {
+  width: 100%;
 }
 </style>
