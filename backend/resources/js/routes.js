@@ -1,5 +1,7 @@
 const Login = () => import("./components/Auth/Login.vue");
-const Dashboard = () => import("./components/Dashboard/Index.vue");
+const Registration = () => import("./components/Auth/Registration.vue");
+const AdminDashboard = () => import("./components/Admin/Dashboard/Index.vue");
+const UserDashboard = () => import("./components/User/Dashboard/Index.vue");
 export const routes = [
     {
         name: "home",
@@ -12,8 +14,18 @@ export const routes = [
         component: Login,
     },
     {
-        name: "dashboard",
-        path: "/dashboard",
-        component: Dashboard,
+        name: "registration",
+        path: "/registration",
+        component: Registration,
+    },
+    {
+        name: "admin-dashboard",
+        path: "/admin/dashboard",
+        component: AdminDashboard,
+    },
+    {
+        name: "user-dashboard",
+        path: "/user/dashboard",
+        component: UserDashboard,
     },
 ];
