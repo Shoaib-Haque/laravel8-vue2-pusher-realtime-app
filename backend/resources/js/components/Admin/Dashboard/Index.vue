@@ -3,7 +3,7 @@
         <div
             class="bg-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-2 flex flex-col"
         >
-            <h1 class="text-gray-600 py-5 font-bold text-3xl"> Dashboard </h1>
+            <h1 class="text-gray-600 py-5 font-bold text-3xl"> Admin Dashboard </h1>
         </div>
     </div>
 </template>
@@ -11,7 +11,7 @@
 <script>
 export default {
     created () {
-        document.title = "dashboard"
+        document.title = "Admin Dashboard"
     },
 }
 </script>
