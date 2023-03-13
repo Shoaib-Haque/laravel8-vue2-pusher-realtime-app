@@ -15,6 +15,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: 'Registration',
+  data: function data() {
+    return {
+      error: '',
+      success: '',
+      errors: {},
+      isConfirmPasswordRequired: false
+    };
+  },
   beforeCreate: function beforeCreate() {
     this.form = this.$form.createForm(this, {
       name: 'Registration'
@@ -22,14 +31,6 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     document.title = "Registration";
-  },
-  name: 'Registration',
-  data: function data() {
-    return {
-      error: '',
-      success: '',
-      errors: {}
-    };
   },
   methods: {
     handleSubmit: function handleSubmit(e) {
@@ -42,29 +43,72 @@ __webpack_require__.r(__webpack_exports__);
       this.form.getFieldValue('email') !== undefined ? this.form.setFieldsValue({
         'email': this.form.getFieldValue('email').trim()
       }) : null;
-      //   this.form.validateFields((err, values) => {
-      //     if (!err) {
-      var user_auth_data = {
-        username: this.form.getFieldValue('username'),
-        email: this.form.getFieldValue('email'),
-        password: this.form.getFieldValue('password'),
-        confirm_password: this.form.getFieldValue('confirm_password')
-      };
-      axios__WEBPACK_IMPORTED_MODULE_0___default().post("http://127.0.0.1:8000/api/" + 'auth/user', user_auth_data).then(function (response) {
-        _this.success = response.data.message;
-      })["catch"](function (error) {
-        if (error.response.status === 422) {
-          _this.errors = error.response.data.errors;
-          console.log(_this.errors);
-        } else if (error.response.status === 500) {
-          _this.error = error.response.data.message;
+      this.form.validateFields(function (err, values) {
+        if (!err) {
+          var user_auth_data = {
+            username: _this.form.getFieldValue('username'),
+            email: _this.form.getFieldValue('email'),
+            password: _this.form.getFieldValue('password'),
+            confirm_password: _this.form.getFieldValue('confirm_password')
+          };
+          axios__WEBPACK_IMPORTED_MODULE_0___default().post("http://127.0.0.1:8000/api/" + 'auth/user', user_auth_data).then(function (response) {
+            _this.success = response.data.message;
+          })["catch"](function (error) {
+            if (error.response.status === 422) {
+              _this.errors = error.response.data.errors;
+              console.log(_this.errors);
+            } else if (error.response.status === 500) {
+              _this.error = error.response.data.message;
+            }
+          });
         }
       });
-      //     }
-      //   });
+    },
+    validateUsername: function validateUsername(rule, value, callback) {
+      if (value === undefined || value === '') {
+        callback(new Error('Username is required'));
+      } else if (value.length < 2) {
+        callback(new Error('Username must be at least 2 characters'));
+      } else if (value.length > 30) {
+        callback(new Error('Username cannot be longer than 30 characters'));
+      } else if (!/^[A-Z].*$/.test(value)) {
+        callback(new Error('Username starts with capital letter'));
+      } else if (!/^[a-zA-Z0-9\s.]*$/.test(value)) {
+        callback(new Error('Username can contain letters, digits, space or dot'));
+      } else {
+        callback();
+      }
+    },
+    validateEmail: function validateEmail(rule, value, callback) {
+      if (value === undefined || value === '') {
+        callback(new Error('Email is required'));
+      } else if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+        callback(new Error('Email format is not correct'));
+      } else if (value.length > 30) {
+        callback(new Error('Email cannot be longer than 30 characters'));
+      } else if (!/^[A-Z][a-zA-Z0-9 .]*$/.test(value)) {
+        callback(new Error('Username can contain letters, digits, space or dot and starts with capital letter'));
+      } else {
+        callback();
+      }
+    },
+    validatePassword: function validatePassword(rule, value, callback) {
+      if (value === undefined || value === '') {
+        callback(new Error('Password is required'));
+      } else if (value.length < 6) {
+        callback(new Error('Password must be at least 2 characters'));
+      } else if (value.length > 20) {
+        callback(new Error('Password cannot be longer than 30 characters'));
+      } else {
+        callback();
+      }
     },
     validateConfirmPassword: function validateConfirmPassword(rule, value, callback) {
-      if (value !== this.form.getFieldValue('password')) {
+      if (this.form.getFieldValue('password') === undefined || this.form.getFieldValue('password') === '') {
+        callback();
+      } else if (value === undefined || value === '') {
+        callback(new Error('Confirm Password is required'));
+      } else if (value !== this.form.getFieldValue('password')) {
         callback(new Error('Confirm password must match password'));
       } else {
         callback();
@@ -132,27 +176,24 @@ var render = function render() {
     on: {
       submit: _vm.handleSubmit
     }
-  }, [_c("a-form-item", [_c("a-input", {
+  }, [_c("a-form-item", {
+    "class": _vm.errors.username ? "has-error" : "",
+    style: _vm.errors.username ? {
+      "margin-bottom": "5px"
+    } : ""
+  }, [_c("a-input", {
     directives: [{
       name: "decorator",
       rawName: "v-decorator",
       value: ["username", {
         rules: [{
-          required: true,
-          message: "Please input your username!"
-        }, {
-          min: 2,
-          message: "Username must be at least 2 characters"
-        }, {
-          max: 30,
-          message: "Username cannot be longer than 30 characters"
+          validator: _vm.validateUsername
         }],
         validateTrigger: "onSubmit"
       }],
-      expression: "[\n                        'username',\n                        {\n                          rules: [\n                                { required: true, message: 'Please input your username!' },\n                                { min:2, message: 'Username must be at least 2 characters' },\n                                { max:30, message: 'Username cannot be longer than 30 characters' },\n                            ],\n                            validateTrigger: 'onSubmit'\n                        },\n                        ]"
+      expression: "[\n                        'username',\n                        {\n                          rules: [\n                                { validator: validateUsername },\n                            ],\n                            validateTrigger: 'onSubmit'\n                        },\n                        ]"
     }],
     attrs: {
-      maxLength: 30,
       placeholder: "Username"
     }
   }, [_c("a-icon", {
@@ -164,24 +205,24 @@ var render = function render() {
       type: "user"
     },
     slot: "prefix"
-  })], 1)], 1), _vm._v(" "), _c("a-form-item", [_c("a-input", {
+  })], 1), _vm._v(" "), _vm.errors.username ? _c("div", [_c("div", {
+    staticClass: "ant-form-explain"
+  }, [_vm._v(_vm._s(_vm.errors.username[0]))])]) : _vm._e()], 1), _vm._v(" "), _c("a-form-item", {
+    "class": _vm.errors.email ? "has-error" : "",
+    style: _vm.errors.email ? {
+      "margin-bottom": "5px"
+    } : ""
+  }, [_c("a-input", {
     directives: [{
       name: "decorator",
       rawName: "v-decorator",
       value: ["email", {
         rules: [{
-          required: true,
-          message: "Please input your email!"
-        }, {
-          type: "email",
-          message: "Email format is not correct"
-        }, {
-          max: 20,
-          message: "Email cannot be longer than 20 characters"
+          validator: _vm.validateEmail
         }],
         validateTrigger: "onSubmit"
       }],
-      expression: "[\n                        'email',\n                        { rules: [\n                                { required: true, message: 'Please input your email!' },\n                                { type: 'email', message: 'Email format is not correct' },\n                                { max:20, message: 'Email cannot be longer than 20 characters' }\n                            ],\n                            validateTrigger: 'onSubmit'\n                        },\n                        ]"
+      expression: "[\n                        'email',\n                        {\n                            rules: [\n                                { validator: validateEmail },\n                            ],\n                            validateTrigger: 'onSubmit'\n                        },\n                        ]"
     }],
     attrs: {
       maxLength: 30,
@@ -196,24 +237,24 @@ var render = function render() {
       type: "mail"
     },
     slot: "prefix"
-  })], 1)], 1), _vm._v(" "), _c("a-form-item", [_c("a-input-password", {
+  })], 1), _vm._v(" "), _vm.errors.email ? _c("div", [_c("div", {
+    staticClass: "ant-form-explain"
+  }, [_vm._v(_vm._s(_vm.errors.email[0]))])]) : _vm._e()], 1), _vm._v(" "), _c("a-form-item", {
+    "class": _vm.errors.password ? "has-error" : "",
+    style: _vm.errors.password ? {
+      "margin-bottom": "5px"
+    } : ""
+  }, [_c("a-input-password", {
     directives: [{
       name: "decorator",
       rawName: "v-decorator",
       value: ["password", {
         rules: [{
-          required: true,
-          message: "Please input your Password!"
-        }, {
-          min: 6,
-          message: "Confirm Password must be at least 6 characters"
-        }, {
-          max: 20,
-          message: "Confirm Password cannot be longer than 20 characters"
+          validator: _vm.validatePassword
         }],
         validateTrigger: "onSubmit"
       }],
-      expression: "[\n                        'password',\n                        { rules: [\n                                { required: true, message: 'Please input your Password!' },\n                                { min:6, message: 'Confirm Password must be at least 6 characters' },\n                                { max:20, message: 'Confirm Password cannot be longer than 20 characters' },\n                            ],\n                            validateTrigger: 'onSubmit'\n                        },\n                        ]"
+      expression: "[\n                        'password',\n                        {\n                            rules: [\n                                { validator: validatePassword },\n                            ],\n                            validateTrigger: 'onSubmit'\n                        },\n                        ]"
     }],
     attrs: {
       maxLength: 20,
@@ -229,26 +270,24 @@ var render = function render() {
       type: "lock"
     },
     slot: "prefix"
-  })], 1)], 1), _vm._v(" "), _c("a-form-item", [_c("a-input-password", {
+  })], 1), _vm._v(" "), _vm.errors.password ? _c("div", [_c("div", {
+    staticClass: "ant-form-explain"
+  }, [_vm._v(_vm._s(_vm.errors.password[0]))])]) : _vm._e()], 1), _vm._v(" "), _c("a-form-item", {
+    "class": _vm.errors.confirm_password ? "has-error" : "",
+    style: _vm.errors.confirm_password ? {
+      "margin-bottom": "5px"
+    } : ""
+  }, [_c("a-input-password", {
     directives: [{
       name: "decorator",
       rawName: "v-decorator",
       value: ["confirm_password", {
         rules: [{
-          required: true,
-          message: "Please input confirm password!"
-        }, {
-          min: 6,
-          message: "Confirm Password must be at least 6 characters"
-        }, {
-          max: 20,
-          message: "Confirm Password cannot be longer than 20 characters"
-        }, {
           validator: _vm.validateConfirmPassword
         }],
         validateTrigger: "onSubmit"
       }],
-      expression: "[\n                        'confirm_password',\n                        { rules: [\n                                { required: true, message: 'Please input confirm password!' },\n                                { min:6, message: 'Confirm Password must be at least 6 characters' },\n                                { max:20, message: 'Confirm Password cannot be longer than 20 characters' },\n                                { validator: validateConfirmPassword }\n                            ],\n                            validateTrigger: 'onSubmit'\n                        },\n                        ]"
+      expression: "[\n                        'confirm_password',\n                        { rules: [\n                            { validator: validateConfirmPassword },\n                        ],\n                        validateTrigger: 'onSubmit'\n                        },\n                        ]"
     }],
     attrs: {
       maxLength: 20,
@@ -264,7 +303,9 @@ var render = function render() {
       type: "lock"
     },
     slot: "prefix"
-  })], 1)], 1), _vm._v(" "), _c("a-form-item", [_c("a-button", {
+  })], 1), _vm._v(" "), _vm.errors.confirm_password ? _c("div", [_c("div", {
+    staticClass: "ant-form-explain"
+  }, [_vm._v(_vm._s(_vm.errors.confirm_password[0]))])]) : _vm._e()], 1), _vm._v(" "), _c("a-form-item", [_c("a-button", {
     staticClass: "registration-form-button",
     attrs: {
       type: "primary",

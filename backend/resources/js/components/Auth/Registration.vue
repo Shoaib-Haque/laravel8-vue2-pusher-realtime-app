@@ -18,16 +18,16 @@
                     class="registration-form"
                     @submit="handleSubmit"
                 >
-                    <a-form-item>
+                    <a-form-item
+                    :class="errors.username ? 'has-error' : ''"
+                    :style="errors.username ? { 'margin-bottom': '5px' } : ''">
                         <a-input
-                            :maxLength="30"
+                            
                             v-decorator="[
                             'username',
                             {
                               rules: [
-                                    { required: true, message: 'Please input your username!' },
-                                    { min:2, message: 'Username must be at least 2 characters' },
-                                    { max:30, message: 'Username cannot be longer than 30 characters' },
+                                    { validator: validateUsername },
                                 ],
                                 validateTrigger: 'onSubmit'
                             },
@@ -36,16 +36,19 @@
                         >
                             <a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25)" />
                         </a-input>
+                        <div v-if="errors.username">
+                            <div class="ant-form-explain">{{ errors.username[0] }}</div>
+                        </div>
                     </a-form-item>
-                    <a-form-item>
+                    <a-form-item :class="errors.email ? 'has-error' : ''"
+                    :style="errors.email ? { 'margin-bottom': '5px' } : ''">
                         <a-input
                             :maxLength="30"
                             v-decorator="[
                             'email',
-                            { rules: [
-                                    { required: true, message: 'Please input your email!' },
-                                    { type: 'email', message: 'Email format is not correct' },
-                                    { max:20, message: 'Email cannot be longer than 20 characters' }
+                            {
+                                rules: [
+                                    { validator: validateEmail },
                                 ],
                                 validateTrigger: 'onSubmit'
                             },
@@ -54,16 +57,19 @@
                         >
                             <a-icon slot="prefix" type="mail" style="color: rgba(0,0,0,.25)" />
                         </a-input>
+                        <div v-if="errors.email">
+                            <div class="ant-form-explain">{{ errors.email[0] }}</div>
+                        </div>
                     </a-form-item>
-                    <a-form-item>
+                    <a-form-item :class="errors.password ? 'has-error' : ''"
+                    :style="errors.password ? { 'margin-bottom': '5px' } : ''">
                         <a-input-password
                             :maxLength="20"
                             v-decorator="[
                             'password',
-                            { rules: [
-                                    { required: true, message: 'Please input your Password!' },
-                                    { min:6, message: 'Confirm Password must be at least 6 characters' },
-                                    { max:20, message: 'Confirm Password cannot be longer than 20 characters' },
+                            {
+                                rules: [
+                                    { validator: validatePassword },
                                 ],
                                 validateTrigger: 'onSubmit'
                             },
@@ -73,19 +79,20 @@
                         >
                             <a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25)" />
                         </a-input-password>
+                        <div v-if="errors.password">
+                            <div class="ant-form-explain">{{ errors.password[0] }}</div>
+                        </div>
                     </a-form-item>
-                    <a-form-item>
+                    <a-form-item :class="errors.confirm_password ? 'has-error' : ''"
+                    :style="errors.confirm_password ? { 'margin-bottom': '5px' } : ''">
                         <a-input-password
                             :maxLength="20"
                             v-decorator="[
                             'confirm_password',
                             { rules: [
-                                    { required: true, message: 'Please input confirm password!' },
-                                    { min:6, message: 'Confirm Password must be at least 6 characters' },
-                                    { max:20, message: 'Confirm Password cannot be longer than 20 characters' },
-                                    { validator: validateConfirmPassword }
-                                ],
-                                validateTrigger: 'onSubmit'
+                                { validator: validateConfirmPassword },
+                            ],
+                            validateTrigger: 'onSubmit'
                             },
                             ]"
                             type="password"
@@ -93,6 +100,9 @@
                         >
                             <a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25)" />
                         </a-input-password>
+                        <div v-if="errors.confirm_password">
+                            <div class="ant-form-explain">{{ errors.confirm_password[0] }}</div>
+                        </div>
                     </a-form-item>
                     <a-form-item>
                         <a-button type="primary" html-type="submit" class="registration-form-button">
@@ -113,19 +123,20 @@
 import axios from 'axios';
 
 export default {
-  beforeCreate() {
-    this.form = this.$form.createForm(this, { name: 'Registration' });
-  },
-  created () {
-    document.title = "Registration"
-  },
   name: 'Registration',
   data() {
     return {
       error: '',
       success: '',
-      errors: {}
+      errors: {},
+      isConfirmPasswordRequired: false,
     };
+  },
+  beforeCreate() {
+    this.form = this.$form.createForm(this, { name: 'Registration' });
+  },
+  created () {
+    document.title = "Registration"
   },
   methods: {
     handleSubmit(e) {
@@ -133,8 +144,8 @@ export default {
       this.error = "";
       this.form.getFieldValue('username') !== undefined ? this.form.setFieldsValue({'username': this.form.getFieldValue('username').trim()}) : null;
       this.form.getFieldValue('email') !== undefined ? this.form.setFieldsValue({'email': this.form.getFieldValue('email').trim()}) : null;
-    //   this.form.validateFields((err, values) => {
-    //     if (!err) {
+      this.form.validateFields((err, values) => {
+        if (!err) {
             const user_auth_data = { username: this.form.getFieldValue('username'), email: this.form.getFieldValue('email'), password: this.form.getFieldValue('password'), confirm_password: this.form.getFieldValue('confirm_password') };
             axios.post(process.env.MIX_API_URL + 'auth/user', user_auth_data)
             .then(response => {
@@ -148,16 +159,59 @@ export default {
                     this.error = error.response.data.message;
                 }
             });
-    //     }
-    //   });
+        }
+      });
+    },
+    validateUsername(rule, value, callback) {
+      if(value === undefined || value === '') {
+        callback(new Error('Username is required'))
+      } else if(value.length < 2) {
+        callback(new Error('Username must be at least 2 characters'))
+      } else if(value.length > 30) {
+        callback(new Error('Username cannot be longer than 30 characters'))
+      } else if (!(/^[A-Z].*$/.test(value))) {
+        callback(new Error('Username starts with capital letter'))
+      } else if (!(/^[a-zA-Z0-9\s.]*$/.test(value))) {
+        callback(new Error('Username can contain letters, digits, space or dot'))
+      } else {
+        callback()
+      }
+    },
+    validateEmail(rule, value, callback) {
+      if(value === undefined || value === '') {
+        callback(new Error('Email is required'))
+      } else if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+        callback(new Error('Email format is not correct'))
+      } else if(value.length > 30) {
+        callback(new Error('Email cannot be longer than 30 characters'))
+      } else if (!/^[A-Z][a-zA-Z0-9 .]*$/.test(value)) {
+        callback(new Error('Username can contain letters, digits, space or dot and starts with capital letter'))
+      } else {
+        callback()
+      }
+    },
+    validatePassword(rule, value, callback) {
+      if(value === undefined || value === '') {
+        callback(new Error('Password is required'))
+      } else if(value.length < 6) {
+        callback(new Error('Password must be at least 2 characters'))
+      } else if(value.length > 20) {
+        callback(new Error('Password cannot be longer than 30 characters'))
+      } else {
+        callback()
+      }
     },
     validateConfirmPassword(rule, value, callback) {
-      if (value !== this.form.getFieldValue('password')) {
+      if(this.form.getFieldValue('password') === undefined || this.form.getFieldValue('password') === ''){
+        callback()
+      } else if(value === undefined || value === '') {
+        callback(new Error('Confirm Password is required'))
+      } else if (value !== this.form.getFieldValue('password')) {
         callback(new Error('Confirm password must match password'))
       } else {
         callback()
       }
-    }
+    },
   },
 };
 </script>
