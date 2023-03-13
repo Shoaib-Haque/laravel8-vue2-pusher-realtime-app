@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Notifications\Action;
@@ -42,16 +43,8 @@ class UserAuthController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function create(Request $request)
+    public function create(UserRequest $request)
     {
-        // Validate input data
-        $request->validate([
-            'email' => 'required|email|unique:users,email|max:30',
-            'username' => 'required|string|between:2,30',
-            'password' => 'required|string|between:6,20',
-            'confirm_password' => 'required|same:password',
-        ]);
-
         try {
             // Create new user
             User::create([
