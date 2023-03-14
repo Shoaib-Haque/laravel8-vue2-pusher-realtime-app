@@ -20,6 +20,7 @@
     </li>
     <li><strong>create migration files</strong></li>
     <li><strong>migrate tables</strong><br>php artisan migrate</li>
+    <li><strong>install doctrine/dbal</strong><br> composer require doctrine/dbal</li>
     <li><strong>create models</strong></li>
     <li><strong>authentication</strong></li>
     <ol>
