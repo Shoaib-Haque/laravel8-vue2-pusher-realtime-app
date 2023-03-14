@@ -26,10 +26,10 @@ class UserRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|email:rfc,dns|max:30|unique:users,email',
-            'username' => ['required', 'string', 'min:2', 'max:30', 'regex:/^[a-zA-Z0-9\s.]*$/', new UserNameFirstLetterRule],
-            'password' => 'required|string|min:6|max:20',
-            'confirm_password' => 'required_with:password|string|min:6|max:20|same:password',
+            'username' => ['required', 'min:2', 'max:30', new UserNameFirstLetterRule, 'regex:/^[a-zA-Z0-9\s.]*$/'],
+            'email' => 'required|max:255|email:rfc,dns|unique:users,email',
+            'password' => 'required|min:6|max:20',
+            'confirm_password' => 'required_with:password|same:password',
         ];
     }
 
@@ -41,22 +41,22 @@ class UserRequest extends FormRequest
     public function messages()
     {
         return [
-            'username.required' => 'Username is required123',
-            'username.min' => 'Username must be at least 2 characters123',
-            'username.max' => 'Username cannot be longer than 30 characters123',
-            'username.regex' => 'Username can contain letters, digits, space or dot123',
+            'username.required' => 'Username is required',
+            'username.min' => 'Username must be at least 2 characters',
+            'username.max' => 'Username cannot be longer than 30 characters',
+            'username.regex' => 'Username can contain letters, digits, space or dot',
 
-            'email.required' => 'Email is required123',
-            'email.email' => 'Email format is not correct123',
-            'email.unique' => 'Email is already registered123',
-            'email.max' => 'Email cannot be longer than 30 characters123',
+            'email.required' => 'Email is required',
+            'email.email' => 'Email format is not correct',
+            'email.unique' => 'Email is already registered',
+            'email.max' => 'Email cannot be longer than 255 characters',
 
-            'password.required' => 'Password is required123',
-            'password.min' => 'Password must be at least 6 characters123',
-            'password.max' => 'Password cannot be longer than 20 characters123',
+            'password.required' => 'Password is required',
+            'password.min' => 'Password must be at least 6 characters',
+            'password.max' => 'Password cannot be longer than 20 characters',
 
-            'confirm_password.required_with' => 'Confirm Password is required123',
-            'confirm_password.same' => 'Confirm password must match password123',
+            'confirm_password.required_with' => 'Confirm Password is required',
+            'confirm_password.same' => 'Confirm password must match password',
         ];
     }
 }

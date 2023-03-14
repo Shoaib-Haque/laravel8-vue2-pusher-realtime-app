@@ -7,9 +7,6 @@ use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use Illuminate\Notifications\Action;
-use Illuminate\Support\Facades\Validator;
-use Exception;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
 class UserAuthController extends Controller
