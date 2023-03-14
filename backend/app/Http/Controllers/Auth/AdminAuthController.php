@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\AdminRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Admin;
 use Illuminate\Notifications\Action;
-use Validator;
 use Exception;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
@@ -42,26 +42,24 @@ class AdminAuthController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function create(Request $request)
+    public function create(AdminRequest $request)
     {
-        $request->validate([
-            'username' => 'required|string|unique:admins,username|between:2,100',
-            'password' => 'required|string|min:6',
-        ]);
-
         try {
+            // Create new admin
             Admin::create([
+                'email' => $request->email,
                 'username' => $request->username,
                 'password' => bcrypt($request->password)
             ]);
 
+            // Return response
             return response()->json([
                 'message' => 'Admin Created Successfully!!'
             ]);
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
             return response()->json([
-                'message' => 'Something goes wrong while creating an Admin!!'
+                'message' => 'Something went wrong! Please try again later.'
             ], 500);
         }
     }
