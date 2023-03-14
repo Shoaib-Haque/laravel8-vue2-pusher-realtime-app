@@ -85,7 +85,8 @@ export default {
                 axios.post(process.env.MIX_API_URL + 'auth/admin/login', auth_data)
                 .then(response => {
                     const token = response.data.access_token;
-                    localStorage.setItem('token', token);
+                    localStorage.setItem('authToken', token);
+                    localStorage.setItem('role', "admin");
                     this.$router.push('/admin/dashboard');
                 })
                 .catch(error => {
@@ -95,7 +96,8 @@ export default {
                 axios.post(process.env.MIX_API_URL + 'auth/user/login', auth_data)
                 .then(response => {
                     const token = response.data.access_token;
-                    localStorage.setItem('token', token);
+                    localStorage.setItem('authToken', token);
+                    localStorage.setItem('role', "user");
                     //console.log(localStorage.getItem('token'));
                     this.$router.push('/user/dashboard');
                 })

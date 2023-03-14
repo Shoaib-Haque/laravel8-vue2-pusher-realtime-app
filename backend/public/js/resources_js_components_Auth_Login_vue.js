@@ -43,7 +43,8 @@ __webpack_require__.r(__webpack_exports__);
           if (_this.form.getFieldValue('email').includes("@realtime.com")) {
             axios__WEBPACK_IMPORTED_MODULE_0___default().post("http://127.0.0.1:8000/api/" + 'auth/admin/login', auth_data).then(function (response) {
               var token = response.data.access_token;
-              localStorage.setItem('token', token);
+              localStorage.setItem('authToken', token);
+              localStorage.setItem('role', "admin");
               _this.$router.push('/admin/dashboard');
             })["catch"](function (error) {
               _this.error = error.response.data.message;
@@ -51,7 +52,8 @@ __webpack_require__.r(__webpack_exports__);
           } else {
             axios__WEBPACK_IMPORTED_MODULE_0___default().post("http://127.0.0.1:8000/api/" + 'auth/user/login', auth_data).then(function (response) {
               var token = response.data.access_token;
-              localStorage.setItem('token', token);
+              localStorage.setItem('authToken', token);
+              localStorage.setItem('role', "user");
               //console.log(localStorage.getItem('token'));
               _this.$router.push('/user/dashboard');
             })["catch"](function (error) {
