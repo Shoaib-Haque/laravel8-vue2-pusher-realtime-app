@@ -33,47 +33,33 @@ __webpack_require__.r(__webpack_exports__);
     handleSubmit: function handleSubmit(e) {
       var _this = this;
       e.preventDefault();
+      this.error = "";
       this.form.validateFields(function (err, values) {
         if (!err) {
-          _this.error = "";
-          if (_this.isEmail(_this.form.getFieldValue('username'))) {
-            if (_this.validateEmail(_this.form.getFieldValue('username'))) {
-              var user_auth_data = {
-                email: _this.form.getFieldValue('username'),
-                password: _this.form.getFieldValue('password')
-              };
-              axios__WEBPACK_IMPORTED_MODULE_0___default().post("http://127.0.0.1:8000/api/" + 'auth/user/login', user_auth_data).then(function (response) {
-                var token = response.data.access_token;
-                localStorage.setItem('token', token);
-                //console.log(localStorage.getItem('token'));
-                _this.$router.push('/user/dashboard');
-              })["catch"](function (error) {
-                _this.error = error.response.data.message;
-              });
-            } else {
-              _this.error = "Invalid Login!";
-            }
-          } else {
-            var admin_auth_data = {
-              username: _this.form.getFieldValue('username'),
-              password: _this.form.getFieldValue('password')
-            };
-            axios__WEBPACK_IMPORTED_MODULE_0___default().post("http://127.0.0.1:8000/api/" + 'auth/admin/login', admin_auth_data).then(function (response) {
+          var auth_data = {
+            email: _this.form.getFieldValue('email'),
+            password: _this.form.getFieldValue('password')
+          };
+          if (_this.form.getFieldValue('email').includes("@realtime.com")) {
+            axios__WEBPACK_IMPORTED_MODULE_0___default().post("http://127.0.0.1:8000/api/" + 'auth/admin/login', auth_data).then(function (response) {
               var token = response.data.access_token;
               localStorage.setItem('token', token);
               _this.$router.push('/admin/dashboard');
             })["catch"](function (error) {
               _this.error = error.response.data.message;
             });
+          } else {
+            axios__WEBPACK_IMPORTED_MODULE_0___default().post("http://127.0.0.1:8000/api/" + 'auth/user/login', auth_data).then(function (response) {
+              var token = response.data.access_token;
+              localStorage.setItem('token', token);
+              //console.log(localStorage.getItem('token'));
+              _this.$router.push('/user/dashboard');
+            })["catch"](function (error) {
+              _this.error = error.response.data.message;
+            });
           }
         }
       });
-    },
-    validateEmail: function validateEmail(email) {
-      return email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
-    },
-    isEmail: function isEmail(email) {
-      return email.indexOf('@') > -1;
     }
   }
 });
@@ -136,16 +122,17 @@ var render = function render() {
     directives: [{
       name: "decorator",
       rawName: "v-decorator",
-      value: ["username", {
+      value: ["email", {
         rules: [{
           required: true,
-          message: "Please input your username!"
-        }]
+          message: "Please input your email!"
+        }],
+        validateTrigger: "onSubmit"
       }],
-      expression: "[\n                        'username',\n                        { rules: [{ required: true, message: 'Please input your username!' }] },\n                        ]"
+      expression: "[\n                        'email',\n                        { rules: [{ required: true, message: 'Please input your email!' }],\n                            validateTrigger: 'onSubmit'\n                        },\n                        ]"
     }],
     attrs: {
-      placeholder: "Username"
+      placeholder: "Email"
     }
   }, [_c("a-icon", {
     staticStyle: {
@@ -153,7 +140,7 @@ var render = function render() {
     },
     attrs: {
       slot: "prefix",
-      type: "user"
+      type: "mail"
     },
     slot: "prefix"
   })], 1)], 1), _vm._v(" "), _c("a-form-item", [_c("a-input-password", {
@@ -164,9 +151,10 @@ var render = function render() {
         rules: [{
           required: true,
           message: "Please input your Password!"
-        }]
+        }],
+        validateTrigger: "onSubmit"
       }],
-      expression: "[\n                        'password',\n                        { rules: [{ required: true, message: 'Please input your Password!' }] },\n                        ]"
+      expression: "[\n                        'password',\n                        { rules: [{ required: true, message: 'Please input your Password!' }],\n                            validateTrigger: 'onSubmit'\n                        },\n                        ]"
     }],
     attrs: {
       type: "password",

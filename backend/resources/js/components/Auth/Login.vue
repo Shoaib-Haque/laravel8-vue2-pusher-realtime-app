@@ -16,19 +16,23 @@
                     <a-form-item>
                         <a-input
                             v-decorator="[
-                            'username',
-                            { rules: [{ required: true, message: 'Please input your username!' }] },
+                            'email',
+                            { rules: [{ required: true, message: 'Please input your email!' }],
+                                validateTrigger: 'onSubmit'
+                            },
                             ]"
-                            placeholder="Username"
+                            placeholder="Email"
                         >
-                            <a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25)" />
+                            <a-icon slot="prefix" type="mail" style="color: rgba(0,0,0,.25)" />
                         </a-input>
                     </a-form-item>
                     <a-form-item>
                         <a-input-password
                             v-decorator="[
                             'password',
-                            { rules: [{ required: true, message: 'Please input your Password!' }] },
+                            { rules: [{ required: true, message: 'Please input your Password!' }],
+                                validateTrigger: 'onSubmit'
+                            },
                             ]"
                             type="password"
                             placeholder="Password"
@@ -73,28 +77,12 @@ export default {
   methods: {
     handleSubmit(e) {
       e.preventDefault();
+      this.error = "";
       this.form.validateFields((err, values) => {
         if (!err) {
-            this.error = "";
-            if(this.isEmail(this.form.getFieldValue('username'))) {
-                if(this.validateEmail(this.form.getFieldValue('username'))) {
-                    const user_auth_data = { email: this.form.getFieldValue('username'), password: this.form.getFieldValue('password') };
-                    axios.post(process.env.MIX_API_URL + 'auth/user/login', user_auth_data)
-                        .then(response => {
-                            const token = response.data.access_token;
-                            localStorage.setItem('token', token);
-                            //console.log(localStorage.getItem('token'));
-                            this.$router.push('/user/dashboard');
-                        })
-                        .catch(error => {
-                            this.error = error.response.data.message;
-                        });
-                } else {
-                    this.error = "Invalid Login!";
-                }
-            } else {
-                const admin_auth_data = { username: this.form.getFieldValue('username'), password: this.form.getFieldValue('password') };
-                axios.post(process.env.MIX_API_URL + 'auth/admin/login', admin_auth_data)
+            const auth_data = { email: this.form.getFieldValue('email'), password: this.form.getFieldValue('password') };
+            if(this.form.getFieldValue('email').includes("@realtime.com")) {
+                axios.post(process.env.MIX_API_URL + 'auth/admin/login', auth_data)
                 .then(response => {
                     const token = response.data.access_token;
                     localStorage.setItem('token', token);
@@ -103,17 +91,20 @@ export default {
                 .catch(error => {
                     this.error = error.response.data.message;
                 });
+            } else {
+                axios.post(process.env.MIX_API_URL + 'auth/user/login', auth_data)
+                .then(response => {
+                    const token = response.data.access_token;
+                    localStorage.setItem('token', token);
+                    //console.log(localStorage.getItem('token'));
+                    this.$router.push('/user/dashboard');
+                })
+                .catch(error => {
+                    this.error = error.response.data.message;
+                });
             }
         }
       });
-    },
-    validateEmail(email) {
-        return email.match(
-            /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        );
-    },
-    isEmail(email) {
-        return (email.indexOf('@') > -1);
     },
   },
 };
