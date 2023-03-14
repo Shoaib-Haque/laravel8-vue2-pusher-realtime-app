@@ -202,7 +202,6 @@ var render = function render() {
       expression: "[\n                        'email',\n                        { rules: [\n                                { required: true, message: 'Email is required' },\n                                { type: 'email', message: 'Email format is not correct' },\n                                { max:30, message: 'Email cannot be longer than 30 characters' }\n                            ],\n                            validateTrigger: 'onSubmit'\n                        },\n                        ]"
     }],
     attrs: {
-      maxLength: 30,
       placeholder: "Email"
     }
   }, [_c("a-icon", {
@@ -241,7 +240,6 @@ var render = function render() {
       expression: "[\n                        'password',\n                        { rules: [\n                                { required: true, message: 'Password is required' },\n                                { min:6, message: 'Password must be at least 6 characters' },\n                                { max:20, message: 'Password cannot be longer than 20 characters' },\n                            ],\n                            validateTrigger: 'onSubmit'\n                        },\n                        ]"
     }],
     attrs: {
-      maxLength: 20,
       type: "password",
       placeholder: "Password"
     }
@@ -274,7 +272,6 @@ var render = function render() {
       expression: "[\n                        'confirm_password',\n                        { rules: [\n                            { validator: validateConfirmPassword },\n                        ],\n                        validateTrigger: 'onSubmit'\n                        },\n                        ]"
     }],
     attrs: {
-      maxLength: 20,
       type: "password",
       placeholder: "Confirm Password"
     }

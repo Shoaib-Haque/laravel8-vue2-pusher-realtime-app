@@ -82,12 +82,10 @@ __webpack_require__.r(__webpack_exports__);
     validateEmail: function validateEmail(rule, value, callback) {
       if (value === undefined || value === '') {
         callback(new Error('Email is required'));
-      } else if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      } else if (value.length > 255) {
+        callback(new Error('Email cannot be longer than 255 characters'));
+      } else if (!/^(?!\.)[a-zA-Z0-9._%+-]+@(?!.*\.\.)(?!.*\.$)[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?<!\d{1,3})$/.test(value)) {
         callback(new Error('Email format is not correct'));
-      } else if (value.length > 30) {
-        callback(new Error('Email cannot be longer than 30 characters'));
-      } else if (!/^[A-Z][a-zA-Z0-9 .]*$/.test(value)) {
-        callback(new Error('Username can contain letters, digits, space or dot and starts with capital letter'));
       } else {
         callback();
       }
@@ -96,9 +94,9 @@ __webpack_require__.r(__webpack_exports__);
       if (value === undefined || value === '') {
         callback(new Error('Password is required'));
       } else if (value.length < 6) {
-        callback(new Error('Password must be at least 2 characters'));
+        callback(new Error('Password must be at least 6 characters'));
       } else if (value.length > 20) {
-        callback(new Error('Password cannot be longer than 30 characters'));
+        callback(new Error('Password cannot be longer than 20 characters'));
       } else {
         callback();
       }
@@ -194,6 +192,7 @@ var render = function render() {
       expression: "[\n                        'username',\n                        {\n                          rules: [\n                                { validator: validateUsername },\n                            ],\n                            validateTrigger: 'onSubmit'\n                        },\n                        ]"
     }],
     attrs: {
+      maxLength: 30,
       placeholder: "Username"
     }
   }, [_c("a-icon", {
@@ -225,7 +224,7 @@ var render = function render() {
       expression: "[\n                        'email',\n                        {\n                            rules: [\n                                { validator: validateEmail },\n                            ],\n                            validateTrigger: 'onSubmit'\n                        },\n                        ]"
     }],
     attrs: {
-      maxLength: 30,
+      maxLength: 255,
       placeholder: "Email"
     }
   }, [_c("a-icon", {
