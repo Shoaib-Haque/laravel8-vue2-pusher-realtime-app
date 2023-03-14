@@ -19,7 +19,7 @@ class CreateMessagesTable extends Migration
             $table->foreign('sender_id')->references('id')->on('users');
             $table->integer('receiver_id')->unsigned();
             $table->foreign('receiver_id')->references('id')->on('users');
-            $table->text('message');
+            $table->text('message')->collation('utf8mb4_general_ci');
             $table->dateTime('created_at', $precision = 0);
             $table->dateTime('update_at', $precision = 0);
         });

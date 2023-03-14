@@ -15,8 +15,8 @@ class CreateAdminsTable extends Migration
     {
         Schema::create('admins', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('username', 5)->unique();
-            $table->char('password', 60);
+            $table->string('username', 5)->collation('utf8mb4_general_ci')->unique();
+            $table->char('password', 60)->collation('utf8mb4_general_ci');
         });
 
         \DB::statement('ALTER TABLE admins AUTO_INCREMENT = 1;');

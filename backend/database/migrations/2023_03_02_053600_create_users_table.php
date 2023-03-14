@@ -15,9 +15,9 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('email', 30)->unique();
-            $table->string('user_name', 30);
-            $table->char('password', 60);
+            $table->string('email', 30)->collation('utf8mb4_general_ci')->unique();
+            $table->string('user_name', 30)->collation('utf8mb4_general_ci');
+            $table->char('password', 60)->collation('utf8mb4_general_ci');
         });
 
         \DB::statement('ALTER TABLE users AUTO_INCREMENT = 1;');

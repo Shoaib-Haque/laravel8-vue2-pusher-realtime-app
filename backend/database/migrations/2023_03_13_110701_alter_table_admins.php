@@ -14,7 +14,7 @@ class AlterTableAdmins extends Migration
     public function up()
     {
         Schema::table('admins', function (Blueprint $table) {
-            $table->string('email', 255);
+            $table->string('email', 255)->collation('utf8mb4_general_ci');
         });
     }
 
