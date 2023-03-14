@@ -142,6 +142,7 @@ export default {
     handleSubmit(e) {
       e.preventDefault();
       this.error = "";
+      this.errors = {};
       this.form.getFieldValue('username') !== undefined ? this.form.setFieldsValue({'username': this.form.getFieldValue('username').trim()}) : null;
       this.form.getFieldValue('email') !== undefined ? this.form.setFieldsValue({'email': this.form.getFieldValue('email').trim()}) : null;
       this.form.validateFields((err, values) => {
@@ -154,9 +155,10 @@ export default {
             .catch(error => {
                 if (error.response.status === 422) {
                     this.errors = error.response.data.errors;
-                    console.log(this.errors);
                 } else if (error.response.status === 500) {
                     this.error = error.response.data.message;
+                } else {
+                    this.error = "Something went wrong! Please try again later."
                 }
             });
         }

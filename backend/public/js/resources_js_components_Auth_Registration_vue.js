@@ -37,6 +37,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
       e.preventDefault();
       this.error = "";
+      this.errors = {};
       this.form.getFieldValue('username') !== undefined ? this.form.setFieldsValue({
         'username': this.form.getFieldValue('username').trim()
       }) : null;
@@ -56,9 +57,10 @@ __webpack_require__.r(__webpack_exports__);
           })["catch"](function (error) {
             if (error.response.status === 422) {
               _this.errors = error.response.data.errors;
-              console.log(_this.errors);
             } else if (error.response.status === 500) {
               _this.error = error.response.data.message;
+            } else {
+              _this.error = "Something went wrong! Please try again later.";
             }
           });
         }

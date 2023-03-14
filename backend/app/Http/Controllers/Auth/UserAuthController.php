@@ -57,7 +57,7 @@ class UserAuthController extends Controller
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
             return response()->json([
-                'message' => 'Something goes wrong while creating a User!!'
+                'message' => 'Something went wrong! Please try again later.'
             ], 500);
         }
     }
